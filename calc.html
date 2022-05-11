@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript"
+    src="http://code.jquery.com/jquery.min.js"></script>
+    <title>Calculatrice DZ</title>
+
+</head>
+<body>
+    <h3>    Calculatrice</h3>
+    <!-- Table contenant la calculatrice-->
+    <table>
+        <tr><td colspan="4" id="edit">
+        </td></tr>
+        <tr>
+            <td colspan="3"><span onclick="clear_z()">Clear</span></td>
+            <td class="ope"><span onclick="ope(this.innerHTML)">/</span></td>
+        </tr>        
+        <tr>
+            <td><span onclick="make_nb(this.innerHTML)">7</span></td>
+            <td><span onclick="make_nb(this.innerHTML)">8</span></td>
+            <td><span onclick="make_nb(this.innerHTML)">9</span></td>
+            <td class="ope"><span onclick="ope(this.innerHTML)">*</span></td>
+        </tr>
+        <tr>
+            <td><span onclick="make_nb(this.innerHTML)">4</span></td>
+            <td><span onclick="make_nb(this.innerHTML)">5</span></td>
+            <td><span onclick="make_nb(this.innerHTML)">6</span></td>
+            <td class="ope"><span onclick="ope(this.innerHTML)">-</span></td>
+        </tr>
+        <tr>
+            <td><span onclick="make_nb(this.innerHTML)">1</span></td>
+            <td><span onclick="make_nb(this.innerHTML)">2</span></td>
+            <td><span onclick="make_nb(this.innerHTML)">3</span></td>
+            <td class="ope"><span onclick="ope(this.innerHTML)">+</span></td>
+        </tr>
+        <tr>
+            <td colspan="2"><span onclick="make_nb(this.innerHTML)">0</span></td>
+            <td><span onclick="make_nb(this.innerHTML)">.</span></td>
+            <td class="ope"><span onclick="egal()">=</span></td>
+        </tr>
+
+    </table>
+
+
+    <script>
+        var resultdisplay = "";
+        var result = 0;
+        var nb1 = "";
+        var operator = "";
+
+        //fonction qui prend un nombre en paramètre et le rajoute aux nombres affichés
+        function make_nb(data) {
+            $("#edit").css("background-color", "lightgray");
+            resultdisplay = resultdisplay + data;
+            document.getElementById('edit').innerHTML = resultdisplay;
+        }
+
+        //fonction qui déclenche une opération avec un opérateur en paramètre
+        function ope(data) {
+            if (resultdisplay == '' || resultdisplay == 'NaN') {
+                console.log("error : Type a number");            
+                $("#edit").css("background-color", "red");
+                return
+            }
+            resultdisplay = parseFloat(resultdisplay);            
+            if (typeof(resultdisplay) == 'number') {
+                $("#edit").css("background-color", "lightgray");
+                nb1 = resultdisplay;
+                operator = data;
+                resultdisplay = "";
+                document.getElementById('edit').innerHTML = resultdisplay;
+                console.log(operator);
+            } 
+        }
+        
+
+        //fonction égal qui déclenche le calcul
+        function egal(data) {
+            if (operator == "") {
+                console.log("error : Select an operator");
+                $("#edit").css("background-color", "red");
+                return            
+            }
+            resultdisplay = parseFloat(resultdisplay)
+            console.log(resultdisplay);
+            if (typeof(nb1) == 'number') {
+                if (typeof(resultdisplay) == 'number') {
+                    $("#edit").css("background-color", "lightgray");
+                    if (operator == "+") {
+                        result = nb1 + resultdisplay;
+                    }
+                    if (operator == "-") {
+                        result = nb1 - resultdisplay;
+                    }
+                    if (operator == "*") {
+                        result = nb1 * resultdisplay;
+                    }
+                    if (operator == "/") {
+                        result = nb1 / resultdisplay;
+                        if (resultdisplay == 0) {
+                            clear_z()
+                            resultdisplay = "arrête mec";
+                            $("#edit").css("background-color", "red");
+                            document.getElementById('edit').innerHTML = resultdisplay;                                nb1="result";
+                            return
+                        }
+                    }
+                    resultdisplay = result;
+                    document.getElementById('edit').innerHTML = resultdisplay;
+                    nb1=result;
+                    operator = "";
+
+                } else {
+                    console.log("error");
+                    $("#edit").css("background-color", "red");
+                }
+            }
+        }
+        
+
+        //fonction de remise à zéro
+        function clear_z() {
+            nb1 = "";
+            operator = "";
+            resultdisplay = "";
+            result = 0;
+            $("#edit").css("background-color", "lightgray");
+            document.getElementById('edit').innerHTML = resultdisplay;
+        }
+
+
+        //ajout du support clavier
+        document.onkeypress=function(e){
+        if (e.key == "Enter" || e.key == "=") {
+            egal();
+        } else if (e.key == "+" || e.key == "-" || e.key == "*" || e.key == "/") {
+            ope(e.key);
+        } else if (e.key == "C" || e.key == "c") {
+            clear_z();
+        }
+        if (e.key == "." || e.key == ",") {
+            make_nb(".");
+        }
+        test = parseFloat(e.key);
+        if (test >= 0 && test <= 9) {
+            make_nb(e.key);
+        }
+    }
+    </script>
+</body>
+</html>
